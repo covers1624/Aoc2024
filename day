@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ "$1" = "" ]; then
+  echo "Expected argument."
+  exit 1
+fi
+
+mkdir -p src/test/java
+cat > src/test/java/Day"$1".java <<EOF
+import org.junit.jupiter.api.Test;
+
+public class Day$1 extends Day {
+
+    @Test
+    public void run() {
+
+    }
+}
+EOF
+mkdir -p src/test/resources/day"$1"
+touch src/test/resources/day"$1"/test.txt
+touch src/test/resources/day"$1"/input.txt
