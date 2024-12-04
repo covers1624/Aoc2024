@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 @Threads (4)
 @State (Scope.Benchmark)
 @BenchmarkMode (Mode.AverageTime)
-@Warmup (iterations = 3, time = 20)
-@Measurement (iterations = 5, time = 10)
+@Warmup (iterations = 3, time = 5)
+@Measurement (iterations = 3, time = 5)
 @OutputTimeUnit (TimeUnit.NANOSECONDS)
 public class Day1 extends Day {
 
@@ -31,14 +31,14 @@ public class Day1 extends Day {
             .filterNot(String::isEmpty)
             .toList();
 
-//    @Benchmark
+    // @Benchmark
     public void part1TestInput(Blackhole bh) {
         int result = solveP1(parse(testInput));
         assertResult(result, 11);
         bh.consume(result);
     }
 
-//    @Benchmark
+    // @Benchmark
     public void part2TestInput(Blackhole bh) {
         int result = solveP2(parse(testInput));
         assertResult(result, 31);
@@ -62,6 +62,20 @@ public class Day1 extends Day {
     @Benchmark
     public void part2(Blackhole bh) {
         int result = solveP2(parse(input));
+        assertResult(result, 25574739);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void part2Loop(Blackhole bh) {
+        int result = solveP2Loop(parse(input));
+        assertResult(result, 25574739);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void part2LoopVector(Blackhole bh) {
+        int result = solveP2LoopVector(parse(input));
         assertResult(result, 25574739);
         bh.consume(result);
     }
@@ -95,6 +109,35 @@ public class Day1 extends Day {
         int sum = 0;
         for (int i : numbers.left) {
             sum += i * occurrenceMap.get(i);
+        }
+        return sum;
+    }
+
+    private static int solveP2Loop(Numbers numbers) {
+        int sum = 0;
+        for (int i : numbers.left) {
+            int occur = 0;
+            for (int i1 : numbers.right) {
+                if (i1 == i) {
+                    occur++;
+                }
+            }
+            sum += i * occur;
+        }
+        return sum;
+    }
+
+    private static int solveP2LoopVector(Numbers numbers) {
+        int upperBound = IntVector.SPECIES_PREFERRED.loopBound(numbers.right.length);
+
+        int sum = 0;
+        for (int i : numbers.left) {
+            int occur = 0;
+            for (int vi = 0; vi < upperBound; vi += IntVector.SPECIES_PREFERRED.length()) {
+                IntVector right = IntVector.fromArray(IntVector.SPECIES_PREFERRED, numbers.right, vi);
+                occur += right.eq(i).trueCount();
+            }
+            sum += i * occur;
         }
         return sum;
     }
