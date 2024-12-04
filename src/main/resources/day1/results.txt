@@ -1,4 +1,4 @@
-Benchmark         Mode  Cnt       Score      Error  Units
-Day1.part1        avgt   15   90906.037 ± 5192.285  ns/op
-Day1.part1Vector  avgt   15   91113.659 ± 4126.996  ns/op
-Day1.part2        avgt   15  102705.211 ± 2145.333  ns/op
+Benchmark         Mode  Cnt      Score     Error  Units
+Day1.part1        avgt   15  40352.253 ± 480.985  ns/op
+Day1.part1Vector  avgt   15  40782.727 ± 411.985  ns/op
+Day1.part2        avgt   15  50949.757 ± 677.688  ns/op

@@ -104,10 +104,11 @@ public class Day1 extends Day {
         int[] right = new int[lines.size()];
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
-            String[] segs = line.split(" ");
+            int firstSpace = line.indexOf(' ');
+            int lastSpace = line.lastIndexOf(' ');
 
-            left[i] = Integer.parseInt(segs[0]);
-            right[i] = Integer.parseInt(segs[segs.length - 1]);
+            left[i] = Integer.parseInt(line, 0, firstSpace, 10);
+            right[i] = Integer.parseInt(line, lastSpace + 1, line.length(), 10);
         }
         Arrays.sort(left);
         Arrays.sort(right);
