@@ -52,7 +52,14 @@ for (final def fName in file('src/main/java/net/covers1624/aoc2024').list()) {
             languageVersion = java.toolchain.languageVersion
         }
 
-        jvmArgs = ['--add-modules', 'jdk.incubator.vector']
+        jvmArgs = [
+                '--add-modules',
+                'jdk.incubator.vector',
+//                '-XX:+UnlockDiagnosticVMOptions',
+//                "-XX:CompileCommand=PrintAssembly,*${f}.*",
+//                '-XX:+PrintOptoAssembly',
+//                '-XX:PrintAssemblyOptions=intel'
+        ]
 
         mainClass = 'org.openjdk.jmh.Main'
         args '-rff', file("src/main/resources/${f.toLowerCase()}/results.txt")
