@@ -1,18 +1,49 @@
-import org.junit.jupiter.api.Test;
+package net.covers1624.aoc2024;
+
+import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
+//@Fork (0) // For debugger attachment.
+@Fork (3)
+@State (Scope.Benchmark)
+@BenchmarkMode (Mode.AverageTime)
+@Warmup (iterations = 3, time = 5)
+@Measurement (iterations = 3, time = 5)
+@OutputTimeUnit (TimeUnit.NANOSECONDS)
 public class Day1 extends Day {
 
-    @Test
-    public void run() {
-        Numbers testNumbers = parse(loadLines("test.txt"));
-        LOGGER.info(solveP1(testNumbers));
-        LOGGER.info(solveP2(testNumbers));
+    private final List<String> testInput = loadLines("test.txt");
+    private final List<String> input = loadLines("input.txt");
 
-        Numbers inputNumbers = parse(loadLines("input.txt"));
-        LOGGER.info(solveP1(inputNumbers));
-        LOGGER.info(solveP2(inputNumbers));
+//    @Benchmark
+    public void part1TestInput(Blackhole bh) {
+        int result = solveP1(parse(testInput));
+        assertResult(result, 11);
+        bh.consume(result);
+    }
+
+//    @Benchmark
+    public void part2TestInput(Blackhole bh) {
+        int result = solveP2(parse(testInput));
+        assertResult(result, 31);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void part1(Blackhole bh) {
+        int result = solveP1(parse(input));
+        assertResult(result, 1603498);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void part2(Blackhole bh) {
+        int result = solveP2(parse(input));
+        assertResult(result, 25574739);
+        bh.consume(result);
     }
 
     private static int solveP1(Numbers numbers) {
