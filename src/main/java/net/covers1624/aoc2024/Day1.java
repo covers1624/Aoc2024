@@ -2,6 +2,8 @@ package net.covers1624.aoc2024;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import jdk.incubator.vector.IntVector;
+import jdk.incubator.vector.VectorOperators;
 import net.covers1624.quack.collection.FastStream;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -51,6 +53,13 @@ public class Day1 extends Day {
     }
 
     @Benchmark
+    public void part1Vector(Blackhole bh) {
+        int result = solveP1Vector(parse(input));
+        assertResult(result, 1603498);
+        bh.consume(result);
+    }
+
+    @Benchmark
     public void part2(Blackhole bh) {
         int result = solveP2(parse(input));
         assertResult(result, 25574739);
@@ -61,6 +70,19 @@ public class Day1 extends Day {
         int sum = 0;
         for (int i = 0; i < numbers.left.length; i++) {
             sum += Math.abs(numbers.left[i] - numbers.right[i]);
+        }
+        return sum;
+    }
+
+    private static int solveP1Vector(Numbers numbers) {
+        int sum = 0;
+        int upperBound = IntVector.SPECIES_PREFERRED.loopBound(numbers.left.length);
+        for (int i = 0; i < upperBound; i += IntVector.SPECIES_PREFERRED.length()) {
+            IntVector left = IntVector.fromArray(IntVector.SPECIES_PREFERRED, numbers.left, i);
+            IntVector right = IntVector.fromArray(IntVector.SPECIES_PREFERRED, numbers.right, i);
+            sum += left.sub(right)
+                    .abs()
+                    .reduceLanes(VectorOperators.ADD);
         }
         return sum;
     }
