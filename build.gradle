@@ -37,6 +37,10 @@ test {
     useJUnitPlatform()
 }
 
+compileJava {
+    options.compilerArgs += ['--add-modules', 'jdk.incubator.vector']
+}
+
 def allJmh = []
 for (final def fName in file('src/main/java/net/covers1624/aoc2024').list()) {
     def f = fName.replace('.java', '')
@@ -47,6 +51,8 @@ for (final def fName in file('src/main/java/net/covers1624/aoc2024').list()) {
         javaLauncher = javaToolchains.launcherFor {
             languageVersion = java.toolchain.languageVersion
         }
+
+        jvmArgs = ['--add-modules', 'jdk.incubator.vector']
 
         mainClass = 'org.openjdk.jmh.Main'
         args '-rff', file("src/main/resources/${f.toLowerCase()}/results.txt")
