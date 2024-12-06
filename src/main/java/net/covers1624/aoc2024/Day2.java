@@ -24,29 +24,26 @@ public class Day2 extends Day {
 
     @Benchmark
     public void part1(Blackhole bh) {
-        int result = solve(input, false);
+        int result = solve(parse(input), false);
         assertResult(result, 390);
         bh.consume(3);
     }
 
     @Benchmark
     public void part2(Blackhole bh) {
-        int result = solve(input, true);
+        int result = solve(parse(input), true);
         assertResult(result, 439);
         bh.consume(3);
     }
 
-    private int solve(List<String> reports, boolean part2) {
+    private int solve(int[][] reports, boolean part2) {
         int safe = 0;
-        for (String report : reports) {
-            Integer[] ints = FastStream.of(report.split(" "))
-                    .map(Integer::parseInt)
-                    .toArray(new Integer[0]);
-            boolean up = ints[0] < ints[1];
+        for (int[] report : reports) {
+            boolean up = report[0] < report[1];
             boolean borked = false;
             boolean ignored = false;
-            for (int i = 1; i < ints.length; i++) {
-                int diff = ints[i] - ints[i - 1];
+            for (int i = 1; i < report.length; i++) {
+                int diff = report[i] - report[i - 1];
                 if (up && (diff < 1 || diff > 3) || !up && (diff > -1 || diff < -3)) {
                     if (part2 && !ignored) {
                         ignored = true;
@@ -64,5 +61,19 @@ public class Day2 extends Day {
             }
         }
         return safe;
+    }
+
+    private int[][] parse(List<String> lines) {
+        int[][] reports = new int[lines.size()][];
+        for (int j = 0; j < lines.size(); j++) {
+            String line = lines.get(j);
+            String[] segs = line.split(" ");
+            int[] report = new int[segs.length];
+            for (int i = 0; i < segs.length; i++) {
+                report[i] = Integer.parseInt(segs[i]);
+            }
+            reports[j] = report;
+        }
+        return reports;
     }
 }
